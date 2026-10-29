@@ -2,6 +2,9 @@
 tools/node_modules/
 tools/package-lock.json
 
+# Carpeta vieja (ahora el sitio vive en docs/)
+web/
+
 # Originales (ya están duplicados en web/assets/)
 Fotos y videos/
 

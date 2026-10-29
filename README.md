@@ -4,7 +4,7 @@ Sitio estático con la historia visual que se abre al escanear el QR de la tarje
 
 ## Estructura
 
-- `web/` — sitio público (lo que GitHub Pages sirve)
+- `docs/` — sitio público (lo que GitHub Pages sirve)
   - `index.html`, `styles.css`, `script.js`
   - `config.js` — textos editables sin tocar código
   - `assets/` — fotos y videos
