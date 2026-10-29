@@ -106,7 +106,7 @@ const CONFIG = {
     {
       id: 13,
       type: "video",
-      src: "assets/13.MOV",
+      src: "assets/13.mp4",
       caption: "Gracias, Max, por ser ese niño que eres:\ntan talentoso, divertido, noble y de buen corazón.\nNunca dejes de ser ese niño — la vida te obligará a crecer y madurar, pero ese niño interior nunca hay que perderlo.\n\nPsdt. Por favor enséñale a Josefa a hacer bien el paso de Lamine, que da vergüenza 😅"
     }
   ],

@@ -78,6 +78,7 @@ function renderHistoria() {
       video.controls = true;
       video.playsInline = true;
       video.preload = 'metadata';
+      video.poster = posterFor(item.src);
       video.onerror = () => marcarPendiente(media, item.src);
       media.appendChild(video);
     }
@@ -130,9 +131,16 @@ function renderEpilogo() {
     video.controls = true;
     video.playsInline = true;
     video.preload = 'metadata';
+    video.poster = posterFor(item.src);
     video.onerror = () => marcarPendiente(media, item.src);
     media.appendChild(video);
   }
+}
+
+// Devuelve la ruta al poster (first-frame) de un video
+function posterFor(src) {
+  // assets/13.mp4 -> assets/13-poster.jpg
+  return src.replace(/\.[^.]+$/, '-poster.jpg');
 }
 
 function marcarPendiente(container, src) {
@@ -174,11 +182,13 @@ function renderPolaroids() {
       img.alt = '';
       media.appendChild(img);
     } else {
-      const video = document.createElement('video');
-      video.src = item.src;
-      video.muted = true;
-      video.preload = 'metadata';
-      media.appendChild(video);
+      // En la pared de polaroids, usar el poster (imagen) en lugar del video
+      // Mucho más ligero y siempre muestra la miniatura
+      const img = document.createElement('img');
+      img.src = posterFor(item.src);
+      img.loading = 'lazy';
+      img.alt = '';
+      media.appendChild(img);
     }
 
     p.appendChild(media);
@@ -217,6 +227,7 @@ function abrirLightbox(item) {
     video.controls = true;
     video.autoplay = true;
     video.playsInline = true;
+    video.poster = posterFor(item.src);
     contenido.appendChild(video);
   }
 
