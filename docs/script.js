@@ -74,11 +74,12 @@ function renderHistoria() {
       media.appendChild(img);
     } else {
       const video = document.createElement('video');
-      video.src = item.src;
-      video.controls = true;
-      video.playsInline = true;
-      video.preload = 'metadata';
+      // Orden importante en iOS Safari: poster + preload=none ANTES del src
       video.poster = posterFor(item.src);
+      video.preload = 'none';
+      video.playsInline = true;
+      video.controls = true;
+      video.src = item.src;
       video.onerror = () => marcarPendiente(media, item.src);
       media.appendChild(video);
     }
@@ -127,11 +128,11 @@ function renderEpilogo() {
     media.appendChild(img);
   } else {
     const video = document.createElement('video');
-    video.src = item.src;
-    video.controls = true;
-    video.playsInline = true;
-    video.preload = 'metadata';
     video.poster = posterFor(item.src);
+    video.preload = 'none';
+    video.playsInline = true;
+    video.controls = true;
+    video.src = item.src;
     video.onerror = () => marcarPendiente(media, item.src);
     media.appendChild(video);
   }
