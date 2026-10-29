@@ -1,0 +1,81 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0, viewport-fit=cover" />
+  <meta name="theme-color" content="#0a0a0f" />
+  <meta name="robots" content="noindex, nofollow" />
+  <title>Feliz 14, Máximo</title>
+  <link rel="preconnect" href="https://fonts.googleapis.com" />
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+  <link href="https://fonts.googleapis.com/css2?family=Caveat:wght@500;700&family=Inter:wght@400;600;800;900&display=swap" rel="stylesheet" />
+  <link rel="stylesheet" href="styles.css" />
+</head>
+<body>
+
+  <!-- Fondo animado: esferas del dragón flotando -->
+  <div class="bg-canvas" aria-hidden="true">
+    <div class="orb orb-1"></div>
+    <div class="orb orb-2"></div>
+    <div class="orb orb-3"></div>
+    <div class="orb orb-4"></div>
+    <div class="orb orb-5"></div>
+  </div>
+
+  <!-- SECCIÓN 1: PORTADA -->
+  <section class="portada" id="portada">
+    <div class="portada-contenido">
+      <p class="portada-tag">14 años · hoy</p>
+      <h1 class="portada-titulo"></h1>
+      <p class="portada-subtitulo"></p>
+      <button class="portada-btn" id="btnAbrir"></button>
+    </div>
+    <div class="scroll-hint">↓</div>
+  </section>
+
+  <!-- SECCIÓN 2: INTRO -->
+  <section class="intro reveal" id="intro">
+    <div class="intro-contenido" id="introTexto"></div>
+  </section>
+
+  <!-- SECCIÓN 3: HISTORIA (se llena dinámicamente) -->
+  <main id="historia"></main>
+
+  <!-- SECCIÓN 4: MENSAJE FINAL -->
+  <section class="final reveal" id="final">
+    <h2 class="final-titulo"></h2>
+    <div class="final-cuerpo"></div>
+    <p class="final-cierre"></p>
+    <p class="final-firma"></p>
+  </section>
+
+  <!-- SECCIÓN 4.5: EPÍLOGO (video 14) -->
+  <section class="epilogo reveal" id="epilogo">
+    <p class="epilogo-intro"></p>
+    <div class="epilogo-media" id="epilogoMedia"></div>
+    <p class="epilogo-caption"></p>
+  </section>
+
+  <!-- SECCIÓN 5: PARED DE POLAROIDS -->
+  <section class="polaroids-section reveal" id="polaroidsSection">
+    <h3 class="polaroids-titulo">Para que vuelvas cuando quieras</h3>
+    <div class="polaroids-wall" id="polaroidsWall"></div>
+  </section>
+
+  <footer class="footer">
+    <p>Hecho con cariño · <span id="anio"></span></p>
+  </footer>
+
+  <!-- Lightbox para polaroids -->
+  <div class="lightbox" id="lightbox" aria-hidden="true">
+    <button class="lightbox-close" id="lightboxClose" aria-label="Cerrar">✕</button>
+    <div class="lightbox-contenido" id="lightboxContenido"></div>
+  </div>
+
+  <!-- Capa de confetti -->
+  <canvas id="confettiCanvas" aria-hidden="true"></canvas>
+
+  <script src="config.js"></script>
+  <script src="script.js"></script>
+</body>
+</html>

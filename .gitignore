@@ -1,0 +1,16 @@
+# Node / tools helper (no se sube al repo)
+tools/node_modules/
+tools/package-lock.json
+
+# Originales (ya están duplicados en web/assets/)
+Fotos y videos/
+
+# Sistema
+.DS_Store
+Thumbs.db
+desktop.ini
+
+# Editor
+.vscode/
+.idea/
+*.swp

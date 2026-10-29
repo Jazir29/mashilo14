@@ -1,0 +1,532 @@
+/* ============================================
+   RESET + VARIABLES
+   ============================================ */
+*, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
+
+:root {
+  --bg-primary: #0a0a0f;
+  --bg-secondary: #15151f;
+  --bg-tertiary: #1f1f2b;
+  --text-primary: #f5f5f7;
+  --text-secondary: #9b9ba8;
+  --text-muted: #6a6a7a;
+  --accent: #ff8c1a;         /* naranja Goku */
+  --accent-glow: #ffb04a;
+  --accent-2: #ff2d55;        /* rojo */
+  --accent-3: #4a9eff;        /* azul */
+  --border: rgba(255, 255, 255, 0.08);
+  --shadow-xl: 0 25px 70px rgba(0, 0, 0, 0.6);
+  --font-sans: 'Inter', -apple-system, BlinkMacSystemFont, 'Segoe UI', sans-serif;
+  --font-hand: 'Caveat', cursive;
+}
+
+html { scroll-behavior: smooth; }
+
+body {
+  background: var(--bg-primary);
+  color: var(--text-primary);
+  font-family: var(--font-sans);
+  font-size: 16px;
+  line-height: 1.6;
+  overflow-x: hidden;
+  min-height: 100vh;
+  position: relative;
+}
+
+/* ============================================
+   FONDO ANIMADO: ESFERAS DEL DRAGÓN
+   ============================================ */
+.bg-canvas {
+  position: fixed;
+  inset: 0;
+  z-index: -1;
+  overflow: hidden;
+  background:
+    radial-gradient(circle at 20% 10%, rgba(255, 140, 26, 0.08), transparent 50%),
+    radial-gradient(circle at 80% 80%, rgba(74, 158, 255, 0.05), transparent 50%),
+    var(--bg-primary);
+}
+
+.orb {
+  position: absolute;
+  border-radius: 50%;
+  background: radial-gradient(circle at 30% 30%, #ffd57a, #ff8c1a 50%, #c45500 100%);
+  box-shadow:
+    0 0 40px rgba(255, 140, 26, 0.4),
+    inset -10px -10px 30px rgba(0, 0, 0, 0.3);
+  opacity: 0.4;
+  animation: float 20s ease-in-out infinite;
+}
+.orb::before {
+  content: "★";
+  position: absolute;
+  inset: 0;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  color: rgba(200, 50, 0, 0.6);
+  font-size: 40%;
+  text-shadow: 0 0 10px rgba(255, 255, 255, 0.5);
+}
+.orb-1 { width: 80px; height: 80px; top: 15%; left: 8%; animation-delay: 0s; }
+.orb-2 { width: 60px; height: 60px; top: 60%; left: 85%; animation-delay: -4s; }
+.orb-3 { width: 100px; height: 100px; top: 85%; left: 15%; animation-delay: -8s; }
+.orb-4 { width: 50px; height: 50px; top: 30%; left: 75%; animation-delay: -12s; }
+.orb-5 { width: 70px; height: 70px; top: 50%; left: 40%; animation-delay: -16s; }
+
+@keyframes float {
+  0%, 100% { transform: translate(0, 0) rotate(0deg); }
+  25% { transform: translate(30px, -40px) rotate(90deg); }
+  50% { transform: translate(-20px, -60px) rotate(180deg); }
+  75% { transform: translate(-40px, 20px) rotate(270deg); }
+}
+
+/* ============================================
+   PORTADA
+   ============================================ */
+.portada {
+  min-height: 100vh;
+  min-height: 100dvh;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  padding: 2rem 1.5rem;
+  text-align: center;
+  position: relative;
+}
+
+.portada-contenido { max-width: 600px; }
+
+.portada-tag {
+  font-size: 0.75rem;
+  letter-spacing: 0.3em;
+  text-transform: uppercase;
+  color: var(--accent);
+  margin-bottom: 1.5rem;
+  font-weight: 600;
+  opacity: 0;
+  animation: fadeInUp 0.8s 0.2s ease-out forwards;
+}
+
+.portada-titulo {
+  font-size: clamp(2.5rem, 10vw, 5rem);
+  font-weight: 900;
+  letter-spacing: -0.02em;
+  line-height: 1;
+  margin-bottom: 1.5rem;
+  background: linear-gradient(135deg, #fff 0%, var(--accent-glow) 50%, var(--accent) 100%);
+  -webkit-background-clip: text;
+  background-clip: text;
+  color: transparent;
+  opacity: 0;
+  animation: fadeInUp 0.8s 0.5s ease-out forwards;
+}
+
+.portada-subtitulo {
+  font-family: var(--font-hand);
+  font-size: clamp(1.3rem, 4vw, 1.8rem);
+  color: var(--text-secondary);
+  margin-bottom: 3rem;
+  opacity: 0;
+  animation: fadeInUp 0.8s 0.9s ease-out forwards;
+}
+
+.portada-btn {
+  background: linear-gradient(135deg, var(--accent) 0%, var(--accent-2) 100%);
+  color: white;
+  border: none;
+  padding: 1rem 2.5rem;
+  font-size: 1rem;
+  font-weight: 700;
+  font-family: inherit;
+  border-radius: 999px;
+  cursor: pointer;
+  letter-spacing: 0.02em;
+  box-shadow: 0 10px 30px rgba(255, 140, 26, 0.4);
+  transition: transform 0.2s, box-shadow 0.2s;
+  opacity: 0;
+  animation: fadeInUp 0.8s 1.3s ease-out forwards;
+}
+.portada-btn:hover { transform: translateY(-2px); box-shadow: 0 15px 40px rgba(255, 140, 26, 0.6); }
+.portada-btn:active { transform: translateY(0); }
+
+.scroll-hint {
+  position: absolute;
+  bottom: 2rem;
+  font-size: 1.5rem;
+  color: var(--text-muted);
+  animation: bounce 2s infinite;
+  opacity: 0;
+  animation: fadeIn 1s 2s ease-out forwards, bounce 2s 2s infinite;
+}
+
+@keyframes bounce {
+  0%, 100% { transform: translateY(0); }
+  50% { transform: translateY(10px); }
+}
+
+@keyframes fadeInUp {
+  from { opacity: 0; transform: translateY(20px); }
+  to { opacity: 1; transform: translateY(0); }
+}
+@keyframes fadeIn {
+  from { opacity: 0; }
+  to { opacity: 1; }
+}
+
+/* ============================================
+   INTRO
+   ============================================ */
+.intro {
+  min-height: 60vh;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  padding: 4rem 1.5rem;
+  text-align: center;
+}
+
+.intro-contenido {
+  max-width: 600px;
+  font-family: var(--font-hand);
+  font-size: clamp(1.5rem, 4.5vw, 2.2rem);
+  line-height: 1.5;
+  color: var(--text-primary);
+}
+.intro-contenido p { margin-bottom: 0.75rem; opacity: 0; transform: translateY(10px); transition: opacity 0.6s, transform 0.6s; }
+.intro-contenido p.visible { opacity: 1; transform: translateY(0); }
+
+/* ============================================
+   HISTORIA
+   ============================================ */
+#historia {
+  padding: 2rem 1.5rem;
+  display: flex;
+  flex-direction: column;
+  gap: 6rem;
+  align-items: center;
+}
+
+.item {
+  width: 100%;
+  max-width: 520px;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+}
+
+.item-media {
+  width: 100%;
+  border-radius: 20px;
+  overflow: hidden;
+  box-shadow: var(--shadow-xl);
+  background: var(--bg-tertiary);
+  position: relative;
+  aspect-ratio: 3 / 4;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+}
+.item-media img, .item-media video {
+  width: 100%;
+  height: 100%;
+  object-fit: cover;
+  display: block;
+}
+
+.item-media.pendiente {
+  background: linear-gradient(135deg, var(--bg-tertiary), var(--bg-secondary));
+  color: var(--text-muted);
+  font-size: 0.9rem;
+  text-align: center;
+  padding: 2rem;
+  flex-direction: column;
+  gap: 0.5rem;
+}
+.item-media.pendiente::before { content: "📷"; font-size: 2.5rem; }
+
+.item-caption {
+  margin-top: 1.5rem;
+  font-size: 1rem;
+  line-height: 1.6;
+  color: var(--text-secondary);
+  text-align: center;
+  white-space: pre-line;
+  max-width: 440px;
+}
+
+.item-numero {
+  font-size: 0.7rem;
+  letter-spacing: 0.3em;
+  color: var(--accent);
+  font-weight: 700;
+  margin-bottom: 0.75rem;
+}
+
+/* Scroll reveal */
+.reveal, .item {
+  opacity: 0;
+  transform: translateY(30px);
+  transition: opacity 0.8s ease-out, transform 0.8s ease-out;
+}
+.reveal.visible, .item.visible {
+  opacity: 1;
+  transform: translateY(0);
+}
+
+/* ============================================
+   MENSAJE FINAL
+   ============================================ */
+.final {
+  padding: 6rem 1.5rem;
+  text-align: center;
+  max-width: 600px;
+  margin: 0 auto;
+}
+
+.final-titulo {
+  font-size: clamp(2rem, 7vw, 3rem);
+  font-weight: 900;
+  margin-bottom: 2rem;
+  background: linear-gradient(135deg, var(--accent-glow), var(--accent));
+  -webkit-background-clip: text;
+  background-clip: text;
+  color: transparent;
+}
+
+.final-cuerpo {
+  font-size: 1.1rem;
+  line-height: 1.8;
+  color: var(--text-primary);
+  margin-bottom: 2.5rem;
+  white-space: pre-line;
+}
+
+.final-cierre {
+  font-family: var(--font-hand);
+  font-size: 1.8rem;
+  color: var(--accent-glow);
+  margin-bottom: 0.5rem;
+}
+
+.final-firma {
+  font-family: var(--font-hand);
+  font-size: 1.5rem;
+  color: var(--text-secondary);
+}
+
+/* ============================================
+   EPÍLOGO (video 14 - después del final)
+   ============================================ */
+.epilogo {
+  padding: 4rem 1.5rem 6rem;
+  max-width: 520px;
+  margin: 0 auto;
+  text-align: center;
+}
+.epilogo-intro {
+  font-family: var(--font-hand);
+  font-size: 1.6rem;
+  color: var(--accent-glow);
+  margin-bottom: 1.5rem;
+}
+.epilogo-media {
+  width: 100%;
+  border-radius: 20px;
+  overflow: hidden;
+  box-shadow: var(--shadow-xl);
+  background: var(--bg-tertiary);
+  aspect-ratio: 3 / 4;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  color: var(--text-muted);
+}
+.epilogo-media video, .epilogo-media img {
+  width: 100%;
+  height: 100%;
+  object-fit: cover;
+  display: block;
+}
+.epilogo-media.pendiente {
+  background: linear-gradient(135deg, var(--bg-tertiary), var(--bg-secondary));
+  padding: 2rem;
+  flex-direction: column;
+  gap: 0.5rem;
+  font-size: 0.9rem;
+}
+.epilogo-media.pendiente::before { content: "🎬"; font-size: 2.5rem; }
+.epilogo-caption {
+  margin-top: 1.5rem;
+  font-size: 1rem;
+  line-height: 1.6;
+  color: var(--text-secondary);
+  white-space: pre-line;
+}
+
+/* ============================================
+   PARED DE POLAROIDS
+   ============================================ */
+.polaroids-section {
+  padding: 4rem 1.5rem 6rem;
+  max-width: 1000px;
+  margin: 0 auto;
+}
+
+.polaroids-titulo {
+  text-align: center;
+  font-family: var(--font-hand);
+  font-size: 1.8rem;
+  color: var(--text-secondary);
+  margin-bottom: 3rem;
+  font-weight: 500;
+}
+
+.polaroids-wall {
+  display: grid;
+  grid-template-columns: repeat(auto-fill, minmax(140px, 1fr));
+  gap: 1.5rem;
+  justify-items: center;
+}
+
+.polaroid {
+  background: #f8f6f0;
+  padding: 10px 10px 40px;
+  border-radius: 2px;
+  box-shadow: 0 8px 20px rgba(0, 0, 0, 0.5);
+  cursor: pointer;
+  transition: transform 0.3s, box-shadow 0.3s;
+  position: relative;
+  width: 100%;
+  max-width: 160px;
+}
+.polaroid:nth-child(odd) { transform: rotate(-3deg); }
+.polaroid:nth-child(even) { transform: rotate(2deg); }
+.polaroid:nth-child(3n) { transform: rotate(-1deg); }
+.polaroid:hover {
+  transform: rotate(0deg) scale(1.08);
+  box-shadow: 0 15px 35px rgba(255, 140, 26, 0.3);
+  z-index: 10;
+}
+.polaroid-media {
+  width: 100%;
+  aspect-ratio: 1;
+  background: #ddd;
+  overflow: hidden;
+  position: relative;
+}
+.polaroid-media img, .polaroid-media video {
+  width: 100%;
+  height: 100%;
+  object-fit: cover;
+}
+.polaroid-media.pendiente {
+  background: #e8e6e0;
+  color: #999;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  font-size: 2rem;
+}
+.polaroid-media.video::after {
+  content: "▶";
+  position: absolute;
+  top: 50%;
+  left: 50%;
+  transform: translate(-50%, -50%);
+  color: white;
+  font-size: 1.5rem;
+  background: rgba(0, 0, 0, 0.5);
+  width: 40px;
+  height: 40px;
+  border-radius: 50%;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  padding-left: 3px;
+}
+
+/* ============================================
+   LIGHTBOX
+   ============================================ */
+.lightbox {
+  position: fixed;
+  inset: 0;
+  background: rgba(0, 0, 0, 0.95);
+  z-index: 100;
+  display: none;
+  align-items: center;
+  justify-content: center;
+  padding: 2rem;
+}
+.lightbox.open { display: flex; }
+.lightbox-contenido {
+  max-width: 90vw;
+  max-height: 85vh;
+  text-align: center;
+}
+.lightbox-contenido img, .lightbox-contenido video {
+  max-width: 100%;
+  max-height: 70vh;
+  border-radius: 8px;
+}
+.lightbox-contenido p {
+  color: white;
+  margin-top: 1rem;
+  font-size: 0.95rem;
+  white-space: pre-line;
+}
+.lightbox-close {
+  position: absolute;
+  top: 1rem;
+  right: 1rem;
+  background: rgba(255, 255, 255, 0.1);
+  color: white;
+  border: none;
+  width: 44px;
+  height: 44px;
+  border-radius: 50%;
+  font-size: 1.2rem;
+  cursor: pointer;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+}
+
+/* ============================================
+   CONFETTI
+   ============================================ */
+#confettiCanvas {
+  position: fixed;
+  inset: 0;
+  pointer-events: none;
+  z-index: 99;
+}
+
+/* ============================================
+   FOOTER
+   ============================================ */
+.footer {
+  text-align: center;
+  padding: 2rem;
+  color: var(--text-muted);
+  font-size: 0.85rem;
+}
+
+/* ============================================
+   RESPONSIVE
+   ============================================ */
+@media (min-width: 768px) {
+  #historia { gap: 8rem; }
+  .item { max-width: 560px; }
+}
+
+/* Reduce motion */
+@media (prefers-reduced-motion: reduce) {
+  *, *::before, *::after {
+    animation-duration: 0.01ms !important;
+    transition-duration: 0.01ms !important;
+  }
+  .orb { animation: none; }
+}
