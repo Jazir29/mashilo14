@@ -73,15 +73,9 @@ function renderHistoria() {
       img.onerror = () => marcarPendiente(media, item.src);
       media.appendChild(img);
     } else {
-      const video = document.createElement('video');
-      // Orden importante en iOS Safari: poster + preload=none ANTES del src
-      video.poster = posterFor(item.src);
-      video.preload = 'none';
-      video.playsInline = true;
-      video.controls = true;
-      video.src = item.src;
-      video.onerror = () => marcarPendiente(media, item.src);
-      media.appendChild(video);
+      // Click-to-play: evita el bug de iOS Safari donde el chrome del <video>
+      // deja un "fantasma" negro flotando sobre el viewport.
+      montarVideoClickToPlay(media, item);
     }
 
     const caption = document.createElement('p');
@@ -127,15 +121,44 @@ function renderEpilogo() {
     img.onerror = () => marcarPendiente(media, item.src);
     media.appendChild(img);
   } else {
-    const video = document.createElement('video');
-    video.poster = posterFor(item.src);
-    video.preload = 'none';
-    video.playsInline = true;
-    video.controls = true;
-    video.src = item.src;
-    video.onerror = () => marcarPendiente(media, item.src);
-    media.appendChild(video);
+    montarVideoClickToPlay(media, item);
   }
+}
+
+// Click-to-play: muestra la imagen poster + botón ▶. Al tocar, carga el <video> real.
+// Esto evita el bug de iOS Safari donde el chrome nativo del <video> deja un "fantasma"
+// negro flotando sobre el viewport incluso con overflow:hidden en el contenedor.
+function montarVideoClickToPlay(container, item) {
+  const posterSrc = posterFor(item.src);
+  const wrapper = document.createElement('button');
+  wrapper.type = 'button';
+  wrapper.className = 'video-placeholder';
+  wrapper.setAttribute('aria-label', 'Reproducir video');
+
+  const img = document.createElement('img');
+  img.src = posterSrc;
+  img.alt = '';
+  img.loading = 'lazy';
+  img.onerror = () => marcarPendiente(container, item.src);
+
+  const playOverlay = document.createElement('span');
+  playOverlay.className = 'play-overlay';
+  playOverlay.innerHTML = '▶';
+
+  wrapper.appendChild(img);
+  wrapper.appendChild(playOverlay);
+  container.appendChild(wrapper);
+
+  wrapper.addEventListener('click', () => {
+    const video = document.createElement('video');
+    video.src = item.src;
+    video.controls = true;
+    video.autoplay = true;
+    video.playsInline = true;
+    video.poster = posterSrc;
+    container.innerHTML = '';
+    container.appendChild(video);
+  });
 }
 
 // Devuelve la ruta al poster (first-frame) de un video
