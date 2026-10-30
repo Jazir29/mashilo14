@@ -7,7 +7,7 @@
 const CONFIG = {
   // --- Datos básicos ---
   nombre: "Máximo",
-  edad: 14,
+  edad: 13,
   firma: "Jazir",
 
   // --- Portada ---

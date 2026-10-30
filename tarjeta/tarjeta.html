@@ -3,11 +3,12 @@
 <head>
   <meta charset="UTF-8" />
   <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-  <title>Tarjeta - Feliz 14, Máximo</title>
+  <title>Tarjeta - Feliz 13, Máximo</title>
   <link rel="preconnect" href="https://fonts.googleapis.com" />
   <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
   <link href="https://fonts.googleapis.com/css2?family=Caveat:wght@500;700&family=Inter:wght@400;600;800;900&display=swap" rel="stylesheet" />
-  <script src="https://cdn.jsdelivr.net/npm/qrcode@1.5.3/build/qrcode.min.js"></script>
+  <script src="lib/qrcode.min.js"></script>
+  <script src="lib/html2canvas.min.js"></script>
   <style>
     /* ============================================
        CONTROLES (fuera de la impresión)
@@ -29,8 +30,53 @@
       padding: 1rem;
       display: flex;
       justify-content: center;
+      align-items: center;
       gap: 1rem;
       border-bottom: 1px solid rgba(255, 255, 255, 0.1);
+      flex-wrap: wrap;
+    }
+    .hint {
+      color: #9b9ba8;
+      font-size: 0.8rem;
+      max-width: 320px;
+      text-align: center;
+    }
+
+    /* LOADER OVERLAY */
+    .loader-overlay {
+      position: fixed;
+      inset: 0;
+      background: rgba(10, 10, 15, 0.9);
+      backdrop-filter: blur(8px);
+      z-index: 9999;
+      display: none;
+      align-items: center;
+      justify-content: center;
+      flex-direction: column;
+      gap: 1.5rem;
+      color: white;
+    }
+    .loader-overlay.visible { display: flex; }
+    .loader-overlay .spinner {
+      width: 80px;
+      height: 80px;
+      border: 6px solid rgba(255, 140, 26, 0.2);
+      border-top-color: #ff8c1a;
+      border-radius: 50%;
+      animation: spin 0.8s linear infinite;
+    }
+    @keyframes spin {
+      to { transform: rotate(360deg); }
+    }
+    .loader-overlay p {
+      font-size: 1.1rem;
+      font-weight: 600;
+      text-align: center;
+    }
+    .loader-overlay .sub {
+      font-size: 0.85rem;
+      color: #9b9ba8;
+      font-weight: 400;
     }
     .btn {
       background: linear-gradient(135deg, #ff8c1a, #ff2d55);
@@ -62,8 +108,8 @@
        TARJETA A4 VERTICAL (210 x 297 mm)
        ============================================ */
     .tarjeta {
-      width: 210mm;
-      height: 297mm;
+      width: 148mm;
+      height: 210mm;
       background: linear-gradient(135deg, #0a0a0f 0%, #1a1a24 50%, #2a1a1a 100%);
       position: relative;
       overflow: hidden;
@@ -71,7 +117,7 @@
       color: #f5f5f7;
       display: flex;
       flex-direction: column;
-      padding: 20mm 15mm;
+      padding: 14mm 10mm;
     }
 
     /* Fondo: collage de fotos sutil */
@@ -83,8 +129,8 @@
       display: grid;
       grid-template-columns: repeat(4, 1fr);
       grid-template-rows: repeat(5, 1fr);
-      gap: 2mm;
-      padding: 10mm;
+      gap: 1.5mm;
+      padding: 6mm;
     }
     .fondo-collage img {
       width: 100%;
@@ -122,9 +168,9 @@
       color: rgba(200, 50, 0, 0.6);
       font-size: 55%;
     }
-    .orb-tr { width: 18mm; height: 18mm; top: 10mm; right: 10mm; }
-    .orb-bl { width: 14mm; height: 14mm; bottom: 15mm; left: 12mm; }
-    .orb-tl { width: 10mm; height: 10mm; top: 25mm; left: 18mm; }
+    .orb-tr { width: 13mm; height: 13mm; top: 7mm; right: 7mm; }
+    .orb-bl { width: 10mm; height: 10mm; bottom: 10mm; left: 8mm; }
+    .orb-tl { width: 7mm; height: 7mm; top: 18mm; left: 12mm; }
 
     /* Contenido en primer plano */
     .contenido {
@@ -142,29 +188,29 @@
       width: 100%;
     }
     .etiqueta {
-      font-size: 10pt;
+      font-size: 8pt;
       letter-spacing: 0.3em;
       text-transform: uppercase;
       color: #ff8c1a;
       font-weight: 600;
-      margin-bottom: 4mm;
+      margin-bottom: 3mm;
     }
     .titulo-tarjeta {
-      font-size: 42pt;
+      font-size: 30pt;
       font-weight: 900;
       letter-spacing: -0.02em;
       line-height: 1;
-      margin-bottom: 2mm;
-      background: linear-gradient(135deg, #fff 0%, #ffb04a 50%, #ff8c1a 100%);
-      -webkit-background-clip: text;
-      background-clip: text;
-      color: transparent;
+      margin-bottom: 1mm;
+      color: #ffb04a;
+      text-shadow:
+        0 0 25px rgba(255, 140, 26, 0.5),
+        0 2px 6px rgba(0, 0, 0, 0.4);
     }
     .nombre-tarjeta {
       font-family: 'Caveat', cursive;
-      font-size: 32pt;
+      font-size: 24pt;
       color: #ffb04a;
-      margin-top: 2mm;
+      margin-top: 1mm;
     }
 
     /* QR SECTION */
@@ -172,41 +218,41 @@
       display: flex;
       flex-direction: column;
       align-items: center;
-      gap: 5mm;
+      gap: 3mm;
     }
     .qr-marco {
       background: white;
-      padding: 6mm;
-      border-radius: 4mm;
-      box-shadow: 0 10px 30px rgba(255, 140, 26, 0.3);
+      padding: 4mm;
+      border-radius: 3mm;
+      box-shadow: 0 8px 22px rgba(255, 140, 26, 0.3);
       position: relative;
     }
     .qr-marco::before, .qr-marco::after {
       content: "";
       position: absolute;
-      width: 8mm;
-      height: 8mm;
-      border: 3px solid #ff8c1a;
+      width: 6mm;
+      height: 6mm;
+      border: 2px solid #ff8c1a;
     }
     .qr-marco::before {
-      top: -3mm; left: -3mm;
+      top: -2mm; left: -2mm;
       border-right: none;
       border-bottom: none;
-      border-top-left-radius: 2mm;
+      border-top-left-radius: 1.5mm;
     }
     .qr-marco::after {
-      bottom: -3mm; right: -3mm;
+      bottom: -2mm; right: -2mm;
       border-left: none;
       border-top: none;
-      border-bottom-right-radius: 2mm;
+      border-bottom-right-radius: 1.5mm;
     }
     #qr canvas, #qr img {
       display: block;
-      width: 70mm !important;
-      height: 70mm !important;
+      width: 55mm !important;
+      height: 55mm !important;
     }
     .qr-instruccion {
-      font-size: 11pt;
+      font-size: 9pt;
       color: #9b9ba8;
       font-weight: 600;
       letter-spacing: 0.05em;
@@ -217,13 +263,13 @@
 
     /* MENSAJE */
     .mensaje {
-      font-size: 13pt;
-      line-height: 1.7;
-      max-width: 150mm;
+      font-size: 10pt;
+      line-height: 1.6;
+      max-width: 110mm;
       color: #e5e5ea;
     }
     .mensaje p {
-      margin: 0 0 3mm;
+      margin: 0 0 2mm;
     }
     .mensaje .destacado {
       color: #ffb04a;
@@ -232,30 +278,36 @@
 
     .firma {
       font-family: 'Caveat', cursive;
-      font-size: 22pt;
+      font-size: 17pt;
       color: #ffb04a;
-      margin-top: 3mm;
+      margin-top: 2mm;
     }
 
     /* Esquinas decorativas */
     .esquina {
       position: absolute;
-      width: 15mm;
-      height: 15mm;
-      border: 2px solid rgba(255, 140, 26, 0.5);
+      width: 10mm;
+      height: 10mm;
+      border: 1.5px solid rgba(255, 140, 26, 0.5);
       z-index: 2;
     }
-    .esquina.tl { top: 8mm; left: 8mm; border-right: none; border-bottom: none; }
-    .esquina.tr { top: 8mm; right: 8mm; border-left: none; border-bottom: none; }
-    .esquina.bl { bottom: 8mm; left: 8mm; border-right: none; border-top: none; }
-    .esquina.br { bottom: 8mm; right: 8mm; border-left: none; border-top: none; }
+    .esquina.tl { top: 5mm; left: 5mm; border-right: none; border-bottom: none; }
+    .esquina.tr { top: 5mm; right: 5mm; border-left: none; border-bottom: none; }
+    .esquina.bl { bottom: 5mm; left: 5mm; border-right: none; border-top: none; }
+    .esquina.br { bottom: 5mm; right: 5mm; border-left: none; border-top: none; }
 
     /* ============================================
        MODO IMPRESIÓN
        ============================================ */
     @page {
-      size: A4 portrait;
+      size: A5 portrait;
       margin: 0;
+    }
+
+    /* Fuerza que fondo oscuro y gradientes se impriman en todos los navegadores */
+    .tarjeta, .tarjeta * {
+      -webkit-print-color-adjust: exact !important;
+      print-color-adjust: exact !important;
     }
 
     @media print {
@@ -264,8 +316,8 @@
       .wrapper { padding: 0; }
       .tarjeta {
         box-shadow: none;
-        width: 210mm;
-        height: 297mm;
+        width: 148mm;
+        height: 210mm;
         page-break-after: always;
       }
     }
@@ -275,8 +327,15 @@
 
   <!-- CONTROLES (no se imprimen) -->
   <div class="controles">
-    <button class="btn" onclick="window.print()">🖨️ Imprimir / Guardar PDF</button>
-    <button class="btn secundario" onclick="window.open('../web/index.html', '_blank')">👁️ Ver la web</button>
+    <button class="btn" id="btnImagen">📥 Descargar imagen (PNG)</button>
+    <button class="btn secundario" onclick="window.print()">🖨️ Imprimir / Guardar PDF</button>
+    <p class="hint">Tamaño A5 (148×210mm). La imagen se descarga a alta resolución, lista para imprimir en imprenta o en casa.</p>
+  </div>
+
+  <!-- LOADER OVERLAY -->
+  <div class="loader-overlay" id="loader">
+    <div class="spinner"></div>
+    <p>Generando imagen...<br/><span class="sub" id="loaderSub">Esto toma 2-5 segundos</span></p>
   </div>
 
   <!-- TARJETA -->
@@ -301,7 +360,7 @@
       <div class="contenido">
 
         <div class="header-top">
-          <p class="etiqueta">14 años · un regalo distinto</p>
+          <p class="etiqueta">13 años · un regalo distinto</p>
           <h1 class="titulo-tarjeta">FELIZ CUMPLE</h1>
           <p class="nombre-tarjeta">Máximo</p>
         </div>
@@ -349,20 +408,64 @@
       collage.appendChild(img);
     }
 
-    // --- GENERAR QR ---
-    const canvas = document.createElement('canvas');
-    document.getElementById('qr').appendChild(canvas);
-    QRCode.toCanvas(canvas, URL_DESTINO, {
-      width: 400,
-      margin: 1,
-      color: {
-        dark: '#0a0a0f',
-        light: '#ffffff'
-      },
-      errorCorrectionLevel: 'H'
-    }, function (error) {
-      if (error) console.error(error);
+    // --- DESCARGAR IMAGEN (configurar PRIMERO para que siempre funcione) ---
+    const btnImagen = document.getElementById('btnImagen');
+    const loader = document.getElementById('loader');
+    const loaderSub = document.getElementById('loaderSub');
+
+    console.log('[tarjeta] Script cargado. html2canvas:', typeof html2canvas, '· QRCode:', typeof QRCode);
+
+    btnImagen.addEventListener('click', async () => {
+      // Mostrar loader INMEDIATAMENTE (antes de cualquier otra cosa)
+      loader.classList.add('visible');
+      loaderSub.textContent = 'Preparando...';
+
+      // Verificar que html2canvas se cargó
+      if (typeof html2canvas === 'undefined') {
+        loader.classList.remove('visible');
+        alert('⚠️ html2canvas no se pudo cargar.\n\nEsto suele pasar al abrir el archivo directamente (file://). Solución: abre la tarjeta desde un servidor local (http://localhost:...).');
+        return;
+      }
+
+      try {
+        loaderSub.textContent = 'Capturando tarjeta...';
+        const tarjeta = document.querySelector('.tarjeta');
+        const canvas = await html2canvas(tarjeta, {
+          scale: 3,
+          useCORS: true,
+          allowTaint: true,
+          backgroundColor: null,
+          logging: true
+        });
+
+        loaderSub.textContent = 'Descargando...';
+        const link = document.createElement('a');
+        link.download = 'tarjeta-maximo.png';
+        link.href = canvas.toDataURL('image/png');
+        link.click();
+
+        setTimeout(() => loader.classList.remove('visible'), 500);
+      } catch (err) {
+        loader.classList.remove('visible');
+        alert('❌ Error generando imagen:\n\n' + err.message + '\n\nRevisa la consola (F12) para más detalle.');
+        console.error('[tarjeta] Error html2canvas:', err);
+      }
     });
+
+    // --- GENERAR QR (al final, para que si falla no bloquee el resto) ---
+    try {
+      new QRCode(document.getElementById('qr'), {
+        text: URL_DESTINO,
+        width: 400,
+        height: 400,
+        colorDark: '#0a0a0f',
+        colorLight: '#ffffff',
+        correctLevel: QRCode.CorrectLevel.H
+      });
+      console.log('[tarjeta] QR generado OK');
+    } catch (err) {
+      console.error('[tarjeta] Error generando QR:', err);
+    }
   </script>
 </body>
 </html>
